@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "utf8.h"
 
-void utf8_to_gbk(const char* u8,char* gbk,DWORD* gbksize)
+void utf8_to_mb(const char* u8,char* mb,DWORD* mbsize)
 {
 	if(u8 == NULL)
 	{
@@ -22,26 +22,26 @@ void utf8_to_gbk(const char* u8,char* gbk,DWORD* gbksize)
 	memset(ansi,0,size);
 	WideCharToMultiByte(CP_ACP,0,wansi,-1,ansi,size,NULL,NULL);
 
-	memcpy(gbk,ansi,size);
-	*gbksize = size;
+	memcpy(mb,ansi,size);
+	*mbsize = size;
 	
 	//clear	
 	free(wansi);
 	free(ansi);	
 }
 
-void gbk_to_utf8(const char* gbk,char* u8,DWORD* u8size)
+void mb_to_utf8(const char* mb,char* u8,DWORD* u8size)
 {
-	if(gbk == NULL)
+	if(mb == NULL)
 	{
 		return;
 	}
 
-	//gbk->unicode
-	size_t size = MultiByteToWideChar(CP_ACP,0,gbk,-1,NULL,0);
+	//mb->unicode
+	size_t size = MultiByteToWideChar(CP_ACP,0,mb,-1,NULL,0);
 	wchar_t* wansi = (wchar_t *)malloc((size)*sizeof(wchar_t));
 	memset(wansi,0,(size)*sizeof(wchar_t));
-	MultiByteToWideChar(CP_ACP,0,gbk,-1,wansi,size);
+	MultiByteToWideChar(CP_ACP,0,mb,-1,wansi,size);
 	
 	//unicode->ascii
 	size = WideCharToMultiByte(CP_UTF8,0,wansi,-1,NULL,0,NULL,NULL);
