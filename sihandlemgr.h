@@ -9,12 +9,12 @@ typedef struct SiHandleInfo
 	HANDLE handle;
 	int u8flag;
 	char orgfile[256];
-	char gbkfile[256];
+	char mbfile[256];
 };
 
 
 //添加到链表
-void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* gbkfile);
+void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* mbfile);
 
 
 //从链表删除

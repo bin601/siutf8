@@ -15,14 +15,14 @@ typedef struct SiHandleLink
 static struct SiHandleLink* si_handle_link = NULL;
 
 //创建一个SiHandleLink结构
-static struct SiHandleLink* SiHandle_Create(HANDLE handle,int u8flag,char* orgfile,char* gbkfile)
+static struct SiHandleLink* SiHandle_Create(HANDLE handle,int u8flag,char* orgfile,char* mbfile)
 {
 	struct SiHandleLink* tmp = (struct SiHandleLink*)malloc(sizeof(struct SiHandleLink));
 	memset(tmp,0,sizeof(struct SiHandleLink));
 	tmp->handleinfo.handle = handle;
 	tmp->handleinfo.u8flag = u8flag;
 	strcpy(tmp->handleinfo.orgfile,orgfile);
-	strcpy(tmp->handleinfo.gbkfile,gbkfile);
+	strcpy(tmp->handleinfo.mbfile,mbfile);
 	return tmp;
 }
 
@@ -32,13 +32,13 @@ static void SiHandle_Destory(struct SiHandleLink* node)
 }
 
 //添加到链表
-void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* gbkfile)
+void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* mbfile)
 {
 	if(handle == INVALID_HANDLE_VALUE)
 	{
 		return;
 	}
-	struct SiHandleLink* file = SiHandle_Create(handle,u8flag,orgfile,gbkfile);
+	struct SiHandleLink* file = SiHandle_Create(handle,u8flag,orgfile,mbfile);
 	struct SiHandleLink* tmp = si_handle_link;
 	
 	if(tmp == NULL)

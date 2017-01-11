@@ -79,32 +79,32 @@ HANDLE WINAPI HookCreateFile(
     	if(u8flag != 0)
     	{    		
     		//OutputDebugStringEx("[%d]%s",u8flag,lpFileName);
-    		DWORD gbksize = 0;
-    		DWORD gbkwriten;
-    		char* gbk = (char *)malloc(fsize+1);
+    		DWORD mbsize = 0;
+    		DWORD mbwriten;
+    		char* mb = (char *)malloc(fsize+1);
 			if(u8flag == 1)   		
-    			utf8_to_gbk(buffer,gbk,&gbksize);
+    			utf8_to_mb(buffer,mb,&mbsize);
     		else if(u8flag == 2)
-    			utf8_to_gbk(buffer+3,gbk,&gbksize);  		
-    		//sprintf(hookfilename,"%s.gbk",lpFileName);
+    			utf8_to_mb(buffer+3,mb,&mbsize);  		
+    		//sprintf(hookfilename,"%s.mb",lpFileName);
     		GetTmpFilename(hash,hookfilename);
-    		HANDLE hGbk = OrgCreateFile(hookfilename,
+    		HANDLE hMb = OrgCreateFile(hookfilename,
 								GENERIC_WRITE,
     							0,
     							NULL,
     							CREATE_ALWAYS,
     							FILE_ATTRIBUTE_NORMAL,
     							NULL);    							
-    		if(hGbk != INVALID_HANDLE_VALUE)
+    		if(hMb != INVALID_HANDLE_VALUE)
     		{
-    			WriteFile(hGbk,gbk,gbksize-1,&gbkwriten,NULL);
-    			OrgCloseHandle(hGbk);
+    			WriteFile(hMb,mb,mbsize-1,&mbwriten,NULL);
+    			OrgCloseHandle(hMb);
     		}
     		else 
     		{
     			OutputDebugStringEx("CreateFile %s Failed![Error=%ld]",hookfilename,GetLastError());
     		}   		
-    		free(gbk);	    		
+    		free(mb);	    		
     	}
     	//calc md5sum only u8
     	if(u8flag != 0)
@@ -151,32 +151,32 @@ HANDLE WINAPI HookCreateFile(
 				{
 					OutputDebugStringEx("u8[%s] Changed outside!",lpFileName);
 					//convert
-					DWORD gbksize = 0;
-		    		DWORD gbkwriten;
-		    		char* gbk = (char *)malloc(fsize+1);
+					DWORD mbsize = 0;
+		    		DWORD mbwriten;
+		    		char* mb = (char *)malloc(fsize+1);
 					if(u8flag == 1)   		
-		    			utf8_to_gbk(buffer,gbk,&gbksize);
+		    			utf8_to_mb(buffer,mb,&mbsize);
 		    		else if(u8flag == 2)
-		    			utf8_to_gbk(buffer+3,gbk,&gbksize);  		
-		    		//sprintf(hookfilename,"%s.gbk",lpFileName);
+		    			utf8_to_mb(buffer+3,mb,&mbsize);  		
+		    		//sprintf(hookfilename,"%s.mb",lpFileName);
 		    		GetTmpFilename(hash,hookfilename);
-		    		HANDLE hGbk = OrgCreateFile(hookfilename,
+		    		HANDLE hMb = OrgCreateFile(hookfilename,
 										GENERIC_WRITE,
 		    							0,
 		    							NULL,
 		    							CREATE_ALWAYS,
 		    							FILE_ATTRIBUTE_NORMAL,
 		    							NULL);    							
-		    		if(hGbk != INVALID_HANDLE_VALUE)
+		    		if(hMb != INVALID_HANDLE_VALUE)
 		    		{
-		    			WriteFile(hGbk,gbk,gbksize-1,&gbkwriten,NULL);
-		    			OrgCloseHandle(hGbk);
+		    			WriteFile(hMb,mb,mbsize-1,&mbwriten,NULL);
+		    			OrgCloseHandle(hMb);
 		    		}
 		    		else 
 		    		{
 		    			OutputDebugStringEx("CreateFile %s Failed![Error=%ld]",hookfilename,GetLastError());
 		    		}   		
-		    		free(gbk);
+		    		free(mb);
 
 		    		//update hash
 		    		memcpy(si_file_info->orgmd5,fmd5,16);
@@ -185,7 +185,7 @@ HANDLE WINAPI HookCreateFile(
 				free(buffer);
 			}
 		}
-		strcpy(hookfilename,si_file_info->gbkfile);
+		strcpy(hookfilename,si_file_info->mbfile);
 	}
 	
 RECOVER:
@@ -228,10 +228,10 @@ BOOL WINAPI HookSetEndOfFile(
 		//读文件
 		DWORD fread;
 		DWORD fsize = SetFilePointer(hFile,0,NULL,FILE_CURRENT);
-		char* gbk = (char *)malloc(fsize+1);
-		memset(gbk,0,fsize+1);
+		char* mb = (char *)malloc(fsize+1);
+		memset(mb,0,fsize+1);
 		SetFilePointer(hFile,0,NULL,FILE_BEGIN);
-		ReadFile(hFile,gbk,fsize,&fread,NULL);
+		ReadFile(hFile,mb,fsize,&fread,NULL);
 		SetFilePointer(hFile,fsize,NULL,FILE_BEGIN);
     	
     	//转成utf8
@@ -240,10 +240,10 @@ BOOL WINAPI HookSetEndOfFile(
     	char* utf8 = (char *)malloc(2*fsize+3);
     	memset(utf8,0,2*fsize+3);
     	if(si_handle_info->u8flag == 1)
-    		gbk_to_utf8(gbk,utf8,&utf8size);
+    		mb_to_utf8(mb,utf8,&utf8size);
     	else if(si_handle_info->u8flag == 2)
     	{
-    		gbk_to_utf8(gbk,utf8+3,&utf8size);
+    		mb_to_utf8(mb,utf8+3,&utf8size);
     		utf8[0] = 0xef;
     		utf8[1] = 0xbb;
     		utf8[2] = 0xbf;
@@ -281,7 +281,7 @@ BOOL WINAPI HookSetEndOfFile(
 		memcpy(si_file_info->orgmd5,fmd5,16);
 		
 		free(utf8);
-		free(gbk);
+		free(mb);
 	}
 	
 	return rtv;

@@ -16,7 +16,7 @@ typedef struct SiFileLink
 static struct SiFileLink* si_file_link = NULL;
 
 //创建一个SiFileLink结构
-static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* gbkfile)
+static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* mbfile)
 {
 	struct SiFileLink* tmp = (struct SiFileLink*)malloc(sizeof(struct SiFileLink));
 	memset(tmp,0,sizeof(struct SiFileLink));
@@ -24,7 +24,7 @@ static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,unsigned c
 	tmp->fileinfo.u8flag = u8flag;
 	memcpy(tmp->fileinfo.orgmd5,md5,16);
 	strcpy(tmp->fileinfo.orgfile,orgfile);
-	strcpy(tmp->fileinfo.gbkfile,gbkfile);
+	strcpy(tmp->fileinfo.mbfile,mbfile);
 	return tmp;
 }
 
@@ -39,9 +39,9 @@ static void SiFile_Destory(struct SiFileLink* file)
 }
 
 //添加到链表
-void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* gbkfile)
+void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* mbfile)
 {
-	struct SiFileLink* file = SiFile_Create(hash,u8flag,md5,orgfile,gbkfile);
+	struct SiFileLink* file = SiFile_Create(hash,u8flag,md5,orgfile,mbfile);
 	
 	struct SiFileLink* tmp = si_file_link;
 	if(tmp == NULL)
@@ -84,7 +84,7 @@ void SiFile_Unlink(void)
 	{
 		if(cur->fileinfo.u8flag != 0)
 		{
-			DeleteFile(cur->fileinfo.gbkfile);
+			DeleteFile(cur->fileinfo.mbfile);
 		}
 			
 		cur = cur->next;
@@ -96,7 +96,7 @@ void SiFile_Unlink(void)
 /**
  * [根据短文件名查找文件编码]
  * @param  title [短文件名]
- * @return       [-1 未找到 0 GBK >0 UTF8]
+ * @return       [-1 未找到 0 MultiByte >0 UTF8]
  */
 int FindU8FlagFromLink(char* title)
 {
