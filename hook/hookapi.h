@@ -7,13 +7,13 @@
 extern "C" {
 #endif
 
-//Ö¸¶¨API½øÐÐHOOK£¬²¢·µ»ØÒ»¸ö½øÈëÔ­º¯ÊýµÄ´úÀíº¯ÊýµØÖ·¡£
+//æŒ‡å®šAPIè¿›è¡ŒHOOKï¼Œå¹¶è¿”å›žä¸€ä¸ªè¿›å…¥åŽŸå‡½æ•°çš„ä»£ç†å‡½æ•°åœ°å€ã€‚
 void* HookFunction(char* ModuleName,char* FunctionName,void* pNewFunction);
 
-//»Ö¸´±»HOOKµÄº¯Êý£¬ËüÐèÒªHookFunctionº¯Êý·µ»ØµÄ´úÀíº¯ÊýµØÖ·×÷Îª²ÎÊý¡£
+//æ¢å¤è¢«HOOKçš„å‡½æ•°ï¼Œå®ƒéœ€è¦HookFunctionå‡½æ•°è¿”å›žçš„ä»£ç†å‡½æ•°åœ°å€ä½œä¸ºå‚æ•°ã€‚
 BOOL UnHookFunction(char* ModuleName,char* FunctionName,void* pProxyFunction);
 
-//¼ì²éÄ³¸öº¯ÊýÊÇ·ñ±»HOOK
+//æ£€æŸ¥æŸä¸ªå‡½æ•°æ˜¯å¦è¢«HOOK
 BOOL IsFuncHooked(char* ModuleName,char* FunctionName);
 
 #ifdef __cplusplus

@@ -1,10 +1,10 @@
 #ifndef __UTF8__H__
 #define __UTF8__H__
 
-//utf8תmb
+//utf8转mb
 void utf8_to_mb(const char* u8,char* mb,DWORD* mbsize);
 
-//mbתutf8
+//mb转utf8
 void mb_to_utf8(const char* mb,char* u8,DWORD* u8size);
 
 //2 utf8 dom

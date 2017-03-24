@@ -5,7 +5,7 @@
 
 
 
-//ÎÄ¼þÁ´±í
+//æ–‡ä»¶é“¾è¡¨
 typedef struct SiFileLink
 {
 	struct SiFileInfo fileinfo;
@@ -15,7 +15,7 @@ typedef struct SiFileLink
 
 static struct SiFileLink* si_file_link = NULL;
 
-//´´½¨Ò»¸öSiFileLink½á¹¹
+//åˆ›å»ºä¸€ä¸ªSiFileLinkç»“æž„
 static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* mbfile)
 {
 	struct SiFileLink* tmp = (struct SiFileLink*)malloc(sizeof(struct SiFileLink));
@@ -38,7 +38,7 @@ static void SiFile_Destory(struct SiFileLink* file)
 	}
 }
 
-//Ìí¼Óµ½Á´±í
+//æ·»åŠ åˆ°é“¾è¡¨
 void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* mbfile)
 {
 	struct SiFileLink* file = SiFile_Create(hash,u8flag,md5,orgfile,mbfile);
@@ -59,7 +59,7 @@ void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfil
 	return;
 }
 
-//´ÓÁ´±íÖÐ²éÕÒÎÄ¼þ
+//ä»Žé“¾è¡¨ä¸­æŸ¥æ‰¾æ–‡ä»¶
 struct SiFileInfo* FindSiFileFromLink(unsigned long hash)
 {
 	struct SiFileLink* cur = si_file_link;
@@ -75,7 +75,7 @@ struct SiFileInfo* FindSiFileFromLink(unsigned long hash)
 	return NULL;
 }
 
-//É¾³ýÁÙÊ±ÎÄ¼þ
+//åˆ é™¤ä¸´æ—¶æ–‡ä»¶
 void SiFile_Unlink(void)
 {
 	struct SiFileLink* cur = si_file_link;
@@ -94,9 +94,9 @@ void SiFile_Unlink(void)
 }
 
 /**
- * [¸ù¾Ý¶ÌÎÄ¼þÃû²éÕÒÎÄ¼þ±àÂë]
- * @param  title [¶ÌÎÄ¼þÃû]
- * @return       [-1 Î´ÕÒµ½ 0 MultiByte >0 UTF8]
+ * [æ ¹æ®çŸ­æ–‡ä»¶åæŸ¥æ‰¾æ–‡ä»¶ç¼–ç ]
+ * @param  title [çŸ­æ–‡ä»¶å]
+ * @return       [-1 æœªæ‰¾åˆ° 0 MultiByte >0 UTF8]
  */
 int FindU8FlagFromLink(char* title)
 {

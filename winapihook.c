@@ -225,7 +225,7 @@ BOOL WINAPI HookSetEndOfFile(
 	si_handle_info = FindSiHandleFromLink(hFile);
 	if(si_handle_info != NULL)
 	{
-		//¶ÁÎÄ¼þ
+		//è¯»æ–‡ä»¶
 		DWORD fread;
 		DWORD fsize = SetFilePointer(hFile,0,NULL,FILE_CURRENT);
 		char* mb = (char *)malloc(fsize+1);
@@ -234,7 +234,7 @@ BOOL WINAPI HookSetEndOfFile(
 		ReadFile(hFile,mb,fsize,&fread,NULL);
 		SetFilePointer(hFile,fsize,NULL,FILE_BEGIN);
     	
-    	//×ª³Éutf8
+    	//è½¬æˆutf8
     	DWORD utf8size = 0;
     	DWORD utf8writen;
     	char* utf8 = (char *)malloc(2*fsize+3);
@@ -254,7 +254,7 @@ BOOL WINAPI HookSetEndOfFile(
     		OutputDebugStringEx("Function :%s Error HandleInfo!",__FUNCTION__);
     	}
     		
-    	//Ð´»Øutf8
+    	//å†™å›žutf8
     	HANDLE hUtf8 = OrgCreateFile(si_handle_info->orgfile,
 								GENERIC_WRITE,
     							0,

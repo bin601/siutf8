@@ -2,7 +2,7 @@
 #include "hookapi.h"
 #include <stdio.h>
 
-//Ö¸¶¨API½øĞĞHOOK£¬²¢·µ»ØÒ»¸ö½øÈëÔ­º¯ÊıµÄ´úÀíº¯ÊıµØÖ·¡£
+//æŒ‡å®šAPIè¿›è¡ŒHOOKï¼Œå¹¶è¿”å›ä¸€ä¸ªè¿›å…¥åŸå‡½æ•°çš„ä»£ç†å‡½æ•°åœ°å€ã€‚
 void* HookFunction(char* ModuleName,char* FunctionName,void* pNewFunction)
 {
 	HMODULE hModule = NULL;
@@ -65,7 +65,7 @@ void* HookFunction(char* ModuleName,char* FunctionName,void* pNewFunction)
 	return pProxyFunction;
 }
 
-//»Ö¸´±»HOOKµÄº¯Êı£¬ËüĞèÒªHookFunctionº¯Êı·µ»ØµÄ´úÀíº¯ÊıµØÖ·×÷Îª²ÎÊı¡£
+//æ¢å¤è¢«HOOKçš„å‡½æ•°ï¼Œå®ƒéœ€è¦HookFunctionå‡½æ•°è¿”å›çš„ä»£ç†å‡½æ•°åœ°å€ä½œä¸ºå‚æ•°ã€‚
 BOOL UnHookFunction(char* ModuleName,char* FunctionName,PVOID pProxyFunction)
 {
 	PVOID pSourceFunction = (PVOID)GetProcAddress(GetModuleHandleA(ModuleName),FunctionName);
@@ -86,7 +86,7 @@ BOOL UnHookFunction(char* ModuleName,char* FunctionName,PVOID pProxyFunction)
 	return TRUE;
 }
 
-//¼ì²éÄ³¸öº¯ÊıÊÇ·ñ±»HOOK
+//æ£€æŸ¥æŸä¸ªå‡½æ•°æ˜¯å¦è¢«HOOK
 BOOL IsFuncHooked(char* ModuleName,char* FunctionName)
 {
 	PVOID pFunction = (PVOID)GetProcAddress(GetModuleHandleA(ModuleName),FunctionName);

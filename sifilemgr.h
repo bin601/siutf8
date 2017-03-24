@@ -2,7 +2,7 @@
 #define __SIFILEMGR__H__
 
 
-//ÎÄ¼ş½á¹¹
+//æ–‡ä»¶ç»“æ„
 typedef struct SiFileInfo
 {
 	unsigned long hash;
@@ -13,14 +13,14 @@ typedef struct SiFileInfo
 };
 
 
-//Ìí¼Óµ½Á´±í
+//æ·»åŠ åˆ°é“¾è¡¨
 void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* mbfile);
 
 
-//É¾³ıÁÙÊ±ÎÄ¼ş
+//åˆ é™¤ä¸´æ—¶æ–‡ä»¶
 void SiFile_Unlink(void);
 
-//´ÓÁ´±íÖĞ²éÕÒÎÄ¼ş
+//ä»é“¾è¡¨ä¸­æŸ¥æ‰¾æ–‡ä»¶
 struct SiFileInfo* FindSiFileFromLink(unsigned long hash);
 
 

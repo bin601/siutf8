@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-//¾ä±ú½á¹¹
+//å¥æŸ„ç»“æ„
 typedef struct SiHandleInfo
 {
 	HANDLE handle;
@@ -13,17 +13,17 @@ typedef struct SiHandleInfo
 };
 
 
-//Ìí¼Óµ½Á´±í
+//æ·»åŠ åˆ°é“¾è¡¨
 void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* mbfile);
 
 
-//´ÓÁ´±íÉ¾³ı
+//ä»é“¾è¡¨åˆ é™¤
 void SiHandle_Del(HANDLE handle);
 
-//µ÷ÊÔ
+//è°ƒè¯•
 void SiHandle_Debug(void);
 
-//´ÓÁ´±íÖĞ²éÕÒ¾ä±ú
+//ä»é“¾è¡¨ä¸­æŸ¥æ‰¾å¥æŸ„
 struct SiHandleInfo* FindSiHandleFromLink(HANDLE handle);
 
 #endif

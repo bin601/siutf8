@@ -5,7 +5,7 @@
 
 
 
-//¾ä±úÁ´±í
+//å¥æŸ„é“¾è¡¨
 typedef struct SiHandleLink
 {
 	struct SiHandleInfo handleinfo;
@@ -14,7 +14,7 @@ typedef struct SiHandleLink
 
 static struct SiHandleLink* si_handle_link = NULL;
 
-//´´½¨Ò»¸öSiHandleLink½á¹¹
+//åˆ›å»ºä¸€ä¸ªSiHandleLinkç»“æ„
 static struct SiHandleLink* SiHandle_Create(HANDLE handle,int u8flag,char* orgfile,char* mbfile)
 {
 	struct SiHandleLink* tmp = (struct SiHandleLink*)malloc(sizeof(struct SiHandleLink));
@@ -31,7 +31,7 @@ static void SiHandle_Destory(struct SiHandleLink* node)
 	free(node);
 }
 
-//Ìí¼Óµ½Á´±í
+//æ·»åŠ åˆ°é“¾è¡¨
 void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* mbfile)
 {
 	if(handle == INVALID_HANDLE_VALUE)
@@ -57,7 +57,7 @@ void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* mbfile)
 }
 
 
-//´ÓÁ´±íÉ¾³ı
+//ä»é“¾è¡¨åˆ é™¤
 void SiHandle_Del(HANDLE handle)
 {
 	struct SiHandleLink* cur = si_handle_link;
@@ -85,7 +85,7 @@ void SiHandle_Del(HANDLE handle)
 	return;
 }
 
-//µ÷ÊÔ
+//è°ƒè¯•
 void SiHandle_Debug(void)
 {
 	struct SiHandleLink* cur = si_handle_link;
@@ -103,7 +103,7 @@ void SiHandle_Debug(void)
 	OutputDebugStringEx("SiHandleLink size=%d",size);
 }
 
-//´ÓÁ´±íÖĞ²éÕÒ¾ä±ú
+//ä»é“¾è¡¨ä¸­æŸ¥æ‰¾å¥æŸ„
 struct SiHandleInfo* FindSiHandleFromLink(HANDLE handle)
 {
 	struct SiHandleLink* cur = si_handle_link;

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "utils.h"
 
-//Êä³öµ÷ÊÔĞÅÏ¢
+//è¾“å‡ºè°ƒè¯•ä¿¡æ¯
 void WINAPI OutputDebugStringEx(LPCTSTR lpcFormatText, ...)
 {
 	char szBuffer[1024];
@@ -17,7 +17,7 @@ void WINAPI OutputDebugStringEx(LPCTSTR lpcFormatText, ...)
 
 
 //copy from openssl
-//×Ö·û´®hash
+//å­—ç¬¦ä¸²hash
 unsigned long HashString(const char* str)
 {
 	int i,l; 
@@ -34,7 +34,7 @@ unsigned long HashString(const char* str)
 	return(ret); 	
 }
 
-//»ñÈ¡¶ÌÎÄ¼şÃû
+//è·å–çŸ­æ–‡ä»¶å
 void GetFilenameFromPath(const char* path,char* filename)
 {
 	int len = strlen(path);
@@ -62,7 +62,7 @@ void GetTmpFilename(const char* orgfile,char* newfile)
 }
 */
 
-//»ñÈ¡ÁÙÊ±ÎÄ¼şÃû
+//è·å–ä¸´æ—¶æ–‡ä»¶å
 void GetTmpFilename(unsigned long hash,char* newfile)
 {
 	char tmppath[512];
@@ -92,7 +92,7 @@ char* rtrim(char* str)
 	return str;
 }
 
-//È¥³ı×Ö·û´®¿Õ¸ñ
+//å»é™¤å­—ç¬¦ä¸²ç©ºæ ¼
 char* Trim(char* str)
 {
 	return ltrim(rtrim(str));

@@ -3,20 +3,20 @@
 
 #include <windows.h>
 
-//Êä³öµ÷ÊÔĞÅÏ¢
+//è¾“å‡ºè°ƒè¯•ä¿¡æ¯
 void WINAPI OutputDebugStringEx(LPCTSTR lpcFormatText, ...);
 
-//×Ö·û´®hash
+//å­—ç¬¦ä¸²hash
 unsigned long HashString(const char* str);
 
-//»ñÈ¡ÁÙÊ±ÎÄ¼şÃû
+//è·å–ä¸´æ—¶æ–‡ä»¶å
 //void GetTmpFilename(const char* orgfile,char* newfile);
 void GetTmpFilename(unsigned long hash,char* newfile);
 
-//»ñÈ¡¶ÌÎÄ¼şÃû
+//è·å–çŸ­æ–‡ä»¶å
 void GetFilenameFromPath(const char* path,char* filename);
 
-//È¥³ı×Ö·û´®¿Õ¸ñ
+//å»é™¤å­—ç¬¦ä¸²ç©ºæ ¼
 char* Trim(char* str);
 
 #endif
