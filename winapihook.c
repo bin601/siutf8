@@ -5,6 +5,7 @@
 #include "sifilemgr.h"
 #include "sihandlemgr.h"
 #include "md5.h"
+#include "TCHAR.h"
 
 
 typedef HANDLE (WINAPI *CreateFileFn)(
@@ -31,7 +32,10 @@ CloseHandleFn OrgCloseHandle = NULL;
 SetEndOfFileFn OrgSetEndOfFile = NULL;
 
 
-
+static BOOL IsSourceInsightFile(LPCTSTR lpFileName)
+{
+	return _tcsstr(lpFileName, _T("Source Insight")) ? TRUE : FALSE;
+}
 
 HANDLE WINAPI HookCreateFile(
 	LPCTSTR lpFileName,
@@ -48,11 +52,19 @@ HANDLE WINAPI HookCreateFile(
 	char hookfilename[512];
 	unsigned char fmd5[16];
 	struct SiFileInfo* si_file_info = NULL;
-	unsigned long hash = HashString(lpFileName);
-	
+	unsigned long hash;
+
+    if (IsSourceInsightFile(lpFileName))
+    {
+        OutputDebugStringEx("Function:%s %s skip!",__FUNCTION__,lpFileName);
+        goto RECOVER;
+    }
+
+	hash = HashString(lpFileName);
+
 	memset(hookfilename,0,sizeof(hookfilename));
-	strcpy(hookfilename,lpFileName);	
-	si_file_info = FindSiFileFromLink(hash);	
+	strcpy(hookfilename,lpFileName);
+	si_file_info = FindSiFileFromLink(hash);
 	if(si_file_info == NULL)
 	{
 		HANDLE hFile = OrgCreateFile(lpFileName,
@@ -66,15 +78,15 @@ HANDLE WINAPI HookCreateFile(
     	{
     		OutputDebugStringEx("Function :%s OrgCreateFile1 %s Failed[%d]",__FUNCTION__,lpFileName,GetLastError());
     		goto RECOVER;
-    	}    	
+    	}
     	DWORD fread;
     	DWORD fsize = GetFileSize(hFile,NULL);
     	char* buffer = (char*)malloc(fsize+1);
     	memset(buffer,0,fsize+1);
     	ReadFile(hFile,buffer,fsize,&fread,NULL);
-    	OrgCloseHandle(hFile);	
-    	u8flag = IsUtf8(buffer,fsize); 	
-	    	
+    	OrgCloseHandle(hFile);
+    	u8flag = IsUtf8(buffer,fsize);
+
     	//pure ascii
     	if(u8flag == 3)
     	{
@@ -83,15 +95,15 @@ HANDLE WINAPI HookCreateFile(
 
     	//convert
     	if(u8flag != 0)
-    	{    		
+    	{
     		//OutputDebugStringEx("[%d]%s",u8flag,lpFileName);
     		DWORD mbsize = 0;
     		DWORD mbwriten;
     		char* mb = (char *)malloc(fsize+1);
-			if(u8flag == 1)   		
+			if(u8flag == 1)
     			utf8_to_mb(buffer,mb,&mbsize);
     		else if(u8flag == 2)
-    			utf8_to_mb(buffer+3,mb,&mbsize);  		
+    			utf8_to_mb(buffer+3,mb,&mbsize);
     		//sprintf(hookfilename,"%s.mb",lpFileName);
     		GetTmpFilename(hash,hookfilename);
     		HANDLE hMb = OrgCreateFile(hookfilename,
@@ -100,17 +112,17 @@ HANDLE WINAPI HookCreateFile(
     							NULL,
     							CREATE_ALWAYS,
     							FILE_ATTRIBUTE_NORMAL,
-    							NULL);    							
+    							NULL);
     		if(hMb != INVALID_HANDLE_VALUE)
     		{
     			WriteFile(hMb,mb,mbsize-1,&mbwriten,NULL);
     			OrgCloseHandle(hMb);
     		}
-    		else 
+    		else
     		{
     			OutputDebugStringEx("CreateFile %s Failed![Error=%ld]",hookfilename,GetLastError());
-    		}   		
-    		free(mb);	    		
+    		}
+    		free(mb);
     	}
     	//calc md5sum only u8
     	if(u8flag != 0)
@@ -118,12 +130,12 @@ HANDLE WINAPI HookCreateFile(
     		memset(fmd5,0,sizeof(fmd5));
     		Md5Sum((unsigned char *)buffer,fsize,fmd5);
     	}
-    	  	
+
     	free(buffer);
-		SiFile_Add(hash,u8flag,fmd5,(char *)lpFileName,hookfilename);	
+		SiFile_Add(hash,u8flag,fmd5,(char *)lpFileName,hookfilename);
 	}
-	else 
-	{		
+	else
+	{
 		u8flag = si_file_info->u8flag;
 		//judge outside change
 		if(u8flag != 0)
@@ -142,7 +154,7 @@ HANDLE WINAPI HookCreateFile(
 		    	{
 		    		OutputDebugStringEx("Function :%s OrgCreateFile2 %s Failed[%d]",__FUNCTION__,lpFileName,GetLastError());
 		    		goto RECOVER;
-		    	}    	
+		    	}
 		    	DWORD fread;
 		    	DWORD fsize = GetFileSize(hFile,NULL);
 		    	char* buffer = (char*)malloc(fsize+1);
@@ -160,10 +172,10 @@ HANDLE WINAPI HookCreateFile(
 					DWORD mbsize = 0;
 		    		DWORD mbwriten;
 		    		char* mb = (char *)malloc(fsize+1);
-					if(u8flag == 1)   		
+					if(u8flag == 1)
 		    			utf8_to_mb(buffer,mb,&mbsize);
 		    		else if(u8flag == 2)
-		    			utf8_to_mb(buffer+3,mb,&mbsize);  		
+		    			utf8_to_mb(buffer+3,mb,&mbsize);
 		    		//sprintf(hookfilename,"%s.mb",lpFileName);
 		    		GetTmpFilename(hash,hookfilename);
 		    		HANDLE hMb = OrgCreateFile(hookfilename,
@@ -172,16 +184,16 @@ HANDLE WINAPI HookCreateFile(
 		    							NULL,
 		    							CREATE_ALWAYS,
 		    							FILE_ATTRIBUTE_NORMAL,
-		    							NULL);    							
+		    							NULL);
 		    		if(hMb != INVALID_HANDLE_VALUE)
 		    		{
 		    			WriteFile(hMb,mb,mbsize-1,&mbwriten,NULL);
 		    			OrgCloseHandle(hMb);
 		    		}
-		    		else 
+		    		else
 		    		{
 		    			OutputDebugStringEx("CreateFile %s Failed![Error=%ld]",hookfilename,GetLastError());
-		    		}   		
+		    		}
 		    		free(mb);
 
 		    		//update hash
@@ -193,15 +205,15 @@ HANDLE WINAPI HookCreateFile(
 		}
 		strcpy(hookfilename,si_file_info->mbfile);
 	}
-	
+
 RECOVER:
 	handle = OrgCreateFile(hookfilename,dwDesiredAccess,dwShareMode,lpSecurityAttributes,
 									dwCreationDisposition,dwFlagsAndAttributes,hTemplateFile);
 	if(u8flag != 0)
 	{
-		SiHandle_Add(handle,u8flag,(char *)lpFileName,hookfilename);		
+		SiHandle_Add(handle,u8flag,(char *)lpFileName,hookfilename);
 	}
-	
+
 	return handle;
 }
 
@@ -215,7 +227,7 @@ BOOL WINAPI HookCloseHandle(
 
 	SiHandle_Del(hObject);
 	rtv = OrgCloseHandle(hObject);
-	
+
 	return rtv;
 }
 
@@ -224,9 +236,9 @@ BOOL WINAPI HookSetEndOfFile(
 )
 {
 	BOOL rtv;
-	
+
 	rtv = OrgSetEndOfFile(hFile);
-	
+
 	struct SiHandleInfo* si_handle_info = NULL;
 	si_handle_info = FindSiHandleFromLink(hFile);
 	if(si_handle_info != NULL)
@@ -239,7 +251,7 @@ BOOL WINAPI HookSetEndOfFile(
 		SetFilePointer(hFile,0,NULL,FILE_BEGIN);
 		ReadFile(hFile,mb,fsize,&fread,NULL);
 		SetFilePointer(hFile,fsize,NULL,FILE_BEGIN);
-    	
+
     	//转成utf8
     	DWORD utf8size = 0;
     	DWORD utf8writen;
@@ -255,11 +267,11 @@ BOOL WINAPI HookSetEndOfFile(
     		utf8[2] = 0xbf;
     		utf8size += 3;
     	}
-    	else 
+    	else
     	{
     		OutputDebugStringEx("Function :%s Error HandleInfo!",__FUNCTION__);
     	}
-    		
+
     	//写回utf8
     	HANDLE hUtf8 = OrgCreateFile(si_handle_info->orgfile,
 								GENERIC_WRITE,
@@ -267,13 +279,13 @@ BOOL WINAPI HookSetEndOfFile(
     							NULL,
     							CREATE_ALWAYS,
     							FILE_ATTRIBUTE_NORMAL,
-    							NULL);    							
+    							NULL);
 		if(hUtf8 != INVALID_HANDLE_VALUE)
 		{
 			WriteFile(hUtf8,utf8,utf8size-1,&utf8writen,NULL);
 			OrgCloseHandle(hUtf8);
 		}
-		else 
+		else
 		{
 			OutputDebugStringEx("CreateFile %s Failed![Error=%ld]",si_handle_info->orgfile,GetLastError());
 		}
@@ -285,11 +297,11 @@ BOOL WINAPI HookSetEndOfFile(
 		memset(fmd5,0,sizeof(fmd5));
 		Md5Sum((unsigned char *)utf8,utf8size-1,fmd5);
 		memcpy(si_file_info->orgmd5,fmd5,16);
-		
+
 		free(utf8);
 		free(mb);
 	}
-	
+
 	return rtv;
 }
 
@@ -302,20 +314,20 @@ BOOL HookWinApi(void)
 		OutputDebugString("Hook CreateFile Failed!");
 		return FALSE;
 	}
-	
+
 	OrgCloseHandle = (CloseHandleFn)HookFunction("kernel32.dll","CloseHandle",(void *)HookCloseHandle);
 	if(OrgCloseHandle == NULL)
 	{
 		OutputDebugString("Hook CloseHandle Failed!");
 		return FALSE;
 	}
-	
+
 	OrgSetEndOfFile = (SetEndOfFileFn)HookFunction("kernel32.dll","SetEndOfFile",(void *)HookSetEndOfFile);
 	if(OrgSetEndOfFile == NULL)
 	{
 		OutputDebugString("Hook SetEndOfFile Failed!");
 		return FALSE;
 	}
-	
+
 	return TRUE;
 }
