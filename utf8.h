@@ -7,6 +7,7 @@ void utf8_to_mb(const char* u8,char* mb,DWORD* mbsize);
 //mb转utf8
 void mb_to_utf8(const char* mb,char* u8,DWORD* u8size);
 
+//3 pure ascii
 //2 utf8 dom
 //1 utf8
 //0 not utf8

@@ -113,6 +113,7 @@ int IsUtf8(char* buf,int size)
 	int u8 = 0;
 	int u8len = 0;
 	int firstbyte = 0;
+    int isPureAscii = 1;
 	const char BOM[3] = {0xef,0xbb,0xbf};
 
 	if(size == 0)
@@ -146,10 +147,12 @@ int IsUtf8(char* buf,int size)
 			{
 				u8 = 0;
 				u8len = 0;
+                isPureAscii = 0;
 			}
 			else
 			{
 				firstbyte = 1;
+                isPureAscii = 0;
 				//u8 3b 1110xxxx 10xxxxxx 10xxxxxx
 				if(CheckBit(buf[i],7) == 1 && CheckBit(buf[i],6) == 1 && CheckBit(buf[i],5) == 0)
 				{
@@ -192,6 +195,12 @@ int IsUtf8(char* buf,int size)
 	if(u8 == 1 && u8len % 3 != 0)
 	{
 		u8 = 0;
+	}
+
+	//check pure ascii
+	if(u8 == 0 && isPureAscii == 1)
+	{
+		u8 = 3;
 	}
 
 	return u8;

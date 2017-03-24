@@ -75,6 +75,12 @@ HANDLE WINAPI HookCreateFile(
     	OrgCloseHandle(hFile);	
     	u8flag = IsUtf8(buffer,fsize); 	
 	    	
+    	//pure ascii
+    	if(u8flag == 3)
+    	{
+            u8flag = 1;
+    	}
+
     	//convert
     	if(u8flag != 0)
     	{    		
