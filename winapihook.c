@@ -45,7 +45,7 @@ HANDLE WINAPI HookCreateFile(
 {
 	HANDLE handle;
 	int u8flag = 0;
-	char hookfilename[256];
+	char hookfilename[512];
 	unsigned char fmd5[16];
 	struct SiFileInfo* si_file_info = NULL;
 	unsigned long hash = HashString(lpFileName);

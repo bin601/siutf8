@@ -9,7 +9,7 @@ void* HookFunction(char* ModuleName,char* FunctionName,void* pNewFunction)
 	UCHAR JumpCode[6] = {0x68,0x00,0x00,0x00,0x00,0xC3};     //push xxxxxxxx ret
 	UCHAR JumpBackCode[6] = {0x68,0x00,0x00,0x00,0x00,0xC3}; //push xxxxxxxx ret
 	PVOID pSourceFunction;
-	char buf[256];
+	char buf[512];
 
 	hModule = GetModuleHandleA(ModuleName);
 	if(hModule == NULL)

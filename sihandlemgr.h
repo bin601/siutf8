@@ -8,8 +8,8 @@ typedef struct SiHandleInfo
 {
 	HANDLE handle;
 	int u8flag;
-	char orgfile[256];
-	char mbfile[256];
+	char orgfile[512];
+	char mbfile[512];
 };
 
 

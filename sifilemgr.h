@@ -8,8 +8,8 @@ typedef struct SiFileInfo
 	unsigned long hash;
 	int u8flag;
 	unsigned char orgmd5[16];
-	char orgfile[256];
-	char mbfile[256];
+	char orgfile[512];
+	char mbfile[512];
 };
 
 
