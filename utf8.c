@@ -6,21 +6,32 @@
 
 void utf8_to_mb(const char* u8,char* mb,DWORD* mbsize)
 {
+    int ret;
 	if(u8 == NULL)
 	{
 		return;
 	}
 	//u8->unicode
 	size_t size = MultiByteToWideChar(CP_UTF8,0,u8,-1,NULL,0);
+    if (size == 0)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
+
 	wchar_t* wansi = (wchar_t *)malloc((size)*sizeof(wchar_t));
 	memset(wansi,0,(size)*sizeof(wchar_t));
-	MultiByteToWideChar(CP_UTF8,0,u8,-1,wansi,size);
+	ret = MultiByteToWideChar(CP_UTF8,0,u8,-1,wansi,size);
+    if (!ret)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
 		
 	//unicode->ascii
 	size = WideCharToMultiByte(CP_ACP,0,wansi,-1,NULL,0,NULL,NULL);
+    if (size == 0)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
+
 	char* ansi = (char *)malloc(size);
 	memset(ansi,0,size);
-	WideCharToMultiByte(CP_ACP,0,wansi,-1,ansi,size,NULL,NULL);
+	ret = WideCharToMultiByte(CP_ACP,0,wansi,-1,ansi,size,NULL,NULL);
+    if (!ret)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
 
 	memcpy(mb,ansi,size);
 	*mbsize = size;
@@ -32,6 +43,7 @@ void utf8_to_mb(const char* u8,char* mb,DWORD* mbsize)
 
 void mb_to_utf8(const char* mb,char* u8,DWORD* u8size)
 {
+    int ret;
 	if(mb == NULL)
 	{
 		return;
@@ -39,15 +51,25 @@ void mb_to_utf8(const char* mb,char* u8,DWORD* u8size)
 
 	//mb->unicode
 	size_t size = MultiByteToWideChar(CP_ACP,0,mb,-1,NULL,0);
+    if (size == 0)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
+
 	wchar_t* wansi = (wchar_t *)malloc((size)*sizeof(wchar_t));
 	memset(wansi,0,(size)*sizeof(wchar_t));
-	MultiByteToWideChar(CP_ACP,0,mb,-1,wansi,size);
+	ret = MultiByteToWideChar(CP_ACP,0,mb,-1,wansi,size);
+    if (!ret)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
 	
 	//unicode->ascii
 	size = WideCharToMultiByte(CP_UTF8,0,wansi,-1,NULL,0,NULL,NULL);
+    if (size == 0)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
+
 	char* ansi = (char *)malloc(size);
 	memset(ansi,0,size);
-	WideCharToMultiByte(CP_UTF8,0,wansi,-1,ansi,size,NULL,NULL);
+	ret = WideCharToMultiByte(CP_UTF8,0,wansi,-1,ansi,size,NULL,NULL);
+    if (!ret)
+        OutputDebugStringEx("<%s>#%d Failed[%d]",__FUNCTION__,__LINE__,GetLastError());
 	
 	memcpy(u8,ansi,size);
 	*u8size = size;
